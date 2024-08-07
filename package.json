@@ -1,0 +1,48 @@
+{
+  "name": "monorepo-utils",
+  "version": "0.0.0",
+  "description": "An opinionated set of utilities for working with a monorepo.",
+  "main": "dist/cjs/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenMcLean981/Monorepo-Utils.git"
+  },
+  "keywords": [
+    "monorepo",
+    "typescript",
+    "workspaces"
+  ],
+  "author": "Ben McLean",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BenMcLean981/Monorepo-Utils/issues"
+  },
+  "homepage": "https://github.com/BenMcLean981/Monorepo-Utils#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.1.0",
+    "eslint": "9.x",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.0.1",
+    "vite": "^5.3.5",
+    "vite-plugin-dts": "^4.0.1",
+    "vitest": "^2.0.5"
+  }
+}
