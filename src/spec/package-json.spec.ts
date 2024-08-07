@@ -73,5 +73,22 @@ describe('PackageJson', () => {
 
       expect(p1.equals(p2)).toBe(false);
     });
+
+    it('Returns false for different additionalData.', () => {
+      const p1 = new PackageJson({
+        name: 'foo',
+        dependencies: [dep1],
+        devDependencies: [dep2],
+        additionalData: { private: 'true' },
+      });
+      const p2 = new PackageJson({
+        name: 'foo',
+        dependencies: [dep1],
+        devDependencies: [dep2],
+        additionalData: { private: 'false' },
+      });
+
+      expect(p1.equals(p2)).toBe(false);
+    });
   });
 });

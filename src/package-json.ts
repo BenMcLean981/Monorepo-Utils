@@ -1,10 +1,13 @@
+import { isEqual } from 'lodash';
 import { Dependency } from './dependency';
+import { Snapshot } from './serialization';
 import { haveSameItems } from './utils';
 
 export type ConstructorArgs = {
   name: string;
   dependencies?: ReadonlyArray<Dependency>;
   devDependencies?: ReadonlyArray<Dependency>;
+  additionalData?: Snapshot;
 };
 
 export class PackageJson {
@@ -14,10 +17,13 @@ export class PackageJson {
 
   private readonly _devDependencies: ReadonlyArray<Dependency>;
 
+  private readonly _additionalData: Snapshot;
+
   public constructor(args: ConstructorArgs) {
     this._name = args.name;
     this._dependencies = args.dependencies ?? [];
     this._devDependencies = args.devDependencies ?? [];
+    this._additionalData = args.additionalData ?? {};
   }
 
   public equals(other: PackageJson): boolean {
@@ -34,7 +40,10 @@ export class PackageJson {
     );
 
     return (
-      this._name === other._name && sameDependencies && sameDevDependencies
+      this._name === other._name &&
+      sameDependencies &&
+      sameDevDependencies &&
+      isEqual(this._additionalData, other._additionalData)
     );
   }
 }
