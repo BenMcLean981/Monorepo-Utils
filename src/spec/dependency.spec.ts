@@ -2,6 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { Dependency } from '../dependency';
 
 describe('Dependency', () => {
+  describe('constructor', () => {
+    it('Sets getters.', () => {
+      const d = new Dependency('foo', '0.1.2');
+
+      expect(d.name).toBe('foo');
+      expect(d.version).toBe('0.1.2');
+    });
+  });
+
   describe('equals', () => {
     it('Returns true for equal.', () => {
       const d1 = new Dependency('foo', '0.1.2');

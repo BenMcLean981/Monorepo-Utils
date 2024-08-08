@@ -2,6 +2,7 @@ import { isEqual } from 'lodash';
 import { Dependency } from './dependency';
 import { Snapshot } from './serialization';
 import { haveSameItems } from './utils';
+import JSON5 from 'json5';
 
 export type ConstructorArgs = {
   name: string;
@@ -26,6 +27,42 @@ export class PackageJson {
     this._additionalData = args.additionalData ?? {};
   }
 
+  public static parse(s: string): PackageJson {
+    const json = JSON5.parse(s);
+
+    const name = json.name;
+    const dependencies = Object.entries(json.dependencies).map(
+      ([name, version]) => new Dependency(name, version as string),
+    );
+
+    const devDependencies = Object.entries(json.devDependencies).map(
+      ([name, version]) => new Dependency(name, version as string),
+    );
+
+    const additionalData = { ...json };
+    delete additionalData['name'];
+    delete additionalData['dependencies'];
+    delete additionalData['devDependencies'];
+
+    return new PackageJson({
+      name,
+      dependencies,
+      devDependencies,
+      additionalData,
+    });
+  }
+
+  public format(): string {
+    const json = {
+      name: this._name,
+      dependencies: makeDependencyObject(this._dependencies),
+      devDependencies: makeDependencyObject(this._devDependencies),
+      ...this._additionalData,
+    };
+
+    return JSON5.stringify(json);
+  }
+
   public equals(other: PackageJson): boolean {
     const sameDependencies = haveSameItems(
       this._dependencies,
@@ -46,4 +83,14 @@ export class PackageJson {
       isEqual(this._additionalData, other._additionalData)
     );
   }
+}
+
+function makeDependencyObject(
+  dependencies: ReadonlyArray<Dependency>,
+): Record<string, string> {
+  const result: Record<string, string> = {};
+
+  dependencies.forEach((d) => (result[d.name] = d.version));
+
+  return result;
 }

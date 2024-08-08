@@ -8,6 +8,14 @@ export class Dependency {
     this._version = version;
   }
 
+  public get name(): string {
+    return this._name;
+  }
+
+  public get version(): string {
+    return this._version;
+  }
+
   public equals(other: Dependency): boolean {
     return this._name === other._name && this._version === other._version;
   }
