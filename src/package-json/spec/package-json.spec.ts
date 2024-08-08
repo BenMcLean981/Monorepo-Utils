@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { PackageJson } from '../package-json';
+import { PackageJson } from '..';
 import { Dependency } from '../dependency';
 
 describe('PackageJson', () => {

@@ -3,7 +3,7 @@ import { expect, it } from 'vitest';
 import { Workspace } from '../workspace';
 import { Project } from '../project';
 import { PackageJson } from '../package-json';
-import { TsConfig } from '../tsconfig';
+import { TsConfig } from '../tsconfig/ts-config';
 
 describe('Workspace', () => {
   describe('equals', () => {

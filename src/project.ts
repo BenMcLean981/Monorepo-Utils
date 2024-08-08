@@ -1,5 +1,5 @@
 import { PackageJson } from './package-json';
-import { TsConfig } from './tsconfig';
+import { TsConfig } from './tsconfig/ts-config';
 
 export class Project {
   private readonly _packageJsonm: PackageJson;
