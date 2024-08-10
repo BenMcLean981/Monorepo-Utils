@@ -1,8 +1,8 @@
 import { isEqual } from 'lodash';
 import { Dependency } from './dependency';
-import { Snapshot } from '../serialization';
-import { haveSameItems } from '../utils';
 import JSON5 from 'json5';
+import { haveSameItems } from '../haveSameItems';
+import { Snapshot } from '../snapshot';
 
 export type ConstructorArgs = {
   name: string;
