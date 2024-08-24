@@ -67,5 +67,15 @@ describe('InMemoryDirectory', () => {
 
       expect(d1.equals(d2)).toBe(false);
     });
+
+    it('Returns false for different types.', () => {
+      const d = new InMemoryDirectory(
+        'd1',
+        [new InMemoryDirectory('sub', [], [])],
+        [new InMemoryFile('f', 'foo')],
+      );
+
+      expect(d.equals(undefined)).toBe(false);
+    });
   });
 });

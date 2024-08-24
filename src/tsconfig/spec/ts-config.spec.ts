@@ -38,5 +38,14 @@ describe('TsConfig', () => {
 
       expect(t1.equals(t2)).toBe(false);
     });
+
+    it('Returns false for different types.', () => {
+      const t = new TsConfig({
+        references: [new Reference('../foo')],
+        additionalData: { compilerOptions: { strict: true } },
+      });
+
+      expect(t.equals(undefined)).toBe(false);
+    });
   });
 });

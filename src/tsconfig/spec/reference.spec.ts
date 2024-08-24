@@ -24,5 +24,11 @@ describe('Reference', () => {
 
       expect(r1.equals(r2)).toBe(false);
     });
+
+    it('Returns false for different types.', () => {
+      const r = new Reference('../foo');
+
+      expect(r.equals(undefined)).toBe(false);
+    });
   });
 });

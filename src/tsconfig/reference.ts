@@ -1,4 +1,6 @@
-export class Reference {
+import { Equalable } from '../haveSameItems';
+
+export class Reference implements Equalable {
   private readonly _path: string;
 
   public constructor(path: string) {
@@ -9,7 +11,11 @@ export class Reference {
     return this._path;
   }
 
-  equals(other: Reference): boolean {
-    return this._path === other._path;
+  equals(other: unknown): boolean {
+    if (other instanceof Reference) {
+      return this._path === other._path;
+    } else {
+      return false;
+    }
   }
 }

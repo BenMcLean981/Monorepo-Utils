@@ -1,6 +1,7 @@
+import { Equalable } from '../../haveSameItems';
 import { File } from '../file';
 
-export class InMemoryFile implements File {
+export class InMemoryFile implements File, Equalable {
   private readonly _name: string;
 
   private readonly _contents: string;
@@ -18,7 +19,11 @@ export class InMemoryFile implements File {
     return this._contents;
   }
 
-  public equals(other: InMemoryFile): boolean {
-    return this.name === other.name && this.read() === other.read();
+  public equals(other: unknown): boolean {
+    if (other instanceof InMemoryFile) {
+      return this.name === other.name && this.read() === other.read();
+    } else {
+      return false;
+    }
   }
 }

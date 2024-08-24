@@ -31,5 +31,11 @@ describe('InMemoryFile', () => {
 
       expect(f1.equals(f2)).toBe(false);
     });
+
+    it('Returns false for different types.', () => {
+      const f = new InMemoryFile('foo.txt', 'example');
+
+      expect(f.equals(undefined)).toBe(false);
+    });
   });
 });

@@ -44,5 +44,14 @@ describe('Project', () => {
 
       expect(p1.equals(p2)).toBe(false);
     });
+
+    it('Returns false for a different type.', () => {
+      const p = new Project(
+        new PackageJson({ name: 'foo', dependencies: [], devDependencies: [] }),
+        new TsConfig(),
+      );
+
+      expect(p.equals(undefined)).toBe(false);
+    });
   });
 });

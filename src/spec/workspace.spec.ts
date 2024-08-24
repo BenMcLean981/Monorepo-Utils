@@ -96,5 +96,11 @@ describe('Workspace', () => {
 
       expect(w1.equals(w2)).toBe(false);
     });
+
+    it('Returns false for a different type.', () => {
+      const w = new Workspace(root1, [project1]);
+
+      expect(w.equals(undefined)).toBe(false);
+    });
   });
 });

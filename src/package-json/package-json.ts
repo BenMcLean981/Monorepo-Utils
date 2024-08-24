@@ -1,6 +1,6 @@
 import JSON5 from 'json5';
 import { isEqual } from 'lodash';
-import { haveSameItems } from '../haveSameItems';
+import { Equalable, haveSameItems } from '../haveSameItems';
 import { Snapshot } from '../snapshot';
 import { Dependency } from './dependency';
 
@@ -12,7 +12,7 @@ export type ConstructorArgs = {
   additionalData?: Snapshot;
 };
 
-export class PackageJson {
+export class PackageJson implements Equalable {
   private readonly _name: string;
 
   private readonly _dependencies: ReadonlyArray<Dependency>;
@@ -88,28 +88,32 @@ export class PackageJson {
     return JSON5.stringify(json);
   }
 
-  public equals(other: PackageJson): boolean {
-    const sameDependencies = haveSameItems(
-      this._dependencies,
-      other._dependencies,
-      (d1, d2) => d1.equals(d2),
-    );
+  public equals(other: unknown): boolean {
+    if (other instanceof PackageJson) {
+      const sameDependencies = haveSameItems(
+        this._dependencies,
+        other._dependencies,
+        (d1, d2) => d1.equals(d2),
+      );
 
-    const sameDevDependencies = haveSameItems(
-      this._devDependencies,
-      other._devDependencies,
-      (d1, d2) => d1.equals(d2),
-    );
+      const sameDevDependencies = haveSameItems(
+        this._devDependencies,
+        other._devDependencies,
+        (d1, d2) => d1.equals(d2),
+      );
 
-    const sameWorkspaces = haveSameItems(this._workspaces, other._workspaces);
+      const sameWorkspaces = haveSameItems(this._workspaces, other._workspaces);
 
-    return (
-      this._name === other._name &&
-      sameDependencies &&
-      sameDevDependencies &&
-      sameWorkspaces &&
-      isEqual(this._additionalData, other._additionalData)
-    );
+      return (
+        this._name === other._name &&
+        sameDependencies &&
+        sameDevDependencies &&
+        sameWorkspaces &&
+        isEqual(this._additionalData, other._additionalData)
+      );
+    } else {
+      return false;
+    }
   }
 }
 

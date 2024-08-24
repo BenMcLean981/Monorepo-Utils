@@ -1,4 +1,6 @@
-export class Dependency {
+import { Equalable } from '../haveSameItems';
+
+export class Dependency implements Equalable {
   private readonly _name: string;
 
   private readonly _version: string;
@@ -16,7 +18,11 @@ export class Dependency {
     return this._version;
   }
 
-  public equals(other: Dependency): boolean {
-    return this._name === other._name && this._version === other._version;
+  public equals(other: unknown): boolean {
+    if (other instanceof Dependency) {
+      return this._name === other._name && this._version === other._version;
+    } else {
+      return false;
+    }
   }
 }

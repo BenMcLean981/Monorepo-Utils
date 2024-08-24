@@ -32,5 +32,11 @@ describe('Dependency', () => {
 
       expect(d1.equals(d2)).toBe(false);
     });
+
+    it('Returns false for different types.', () => {
+      const d = new Dependency('foo', '0.1.2');
+
+      expect(d.equals(undefined)).toBe(false);
+    });
   });
 });

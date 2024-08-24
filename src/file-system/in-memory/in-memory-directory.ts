@@ -1,8 +1,8 @@
-import { haveSameItems } from '../../haveSameItems';
+import { Equalable, haveSameItems } from '../../haveSameItems';
 import { Directory } from '../directory';
 import { File } from '../file';
 
-export class InMemoryDirectory implements Directory {
+export class InMemoryDirectory implements Directory, Equalable {
   private readonly _name: string;
 
   private readonly _subDirectories: ReadonlyArray<Directory>;
@@ -31,11 +31,15 @@ export class InMemoryDirectory implements Directory {
     return this._files;
   }
 
-  public equals(other: InMemoryDirectory): boolean {
-    return (
-      this.name === other.name &&
-      haveSameItems(this.subDirectories, other.subDirectories) &&
-      haveSameItems(this.files, other.files)
-    );
+  public equals(other: unknown): boolean {
+    if (other instanceof InMemoryDirectory) {
+      return (
+        this.name === other.name &&
+        haveSameItems(this.subDirectories, other.subDirectories) &&
+        haveSameItems(this.files, other.files)
+      );
+    } else {
+      return false;
+    }
   }
 }

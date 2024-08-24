@@ -115,6 +115,17 @@ describe('PackageJson', () => {
 
       expect(p1.equals(p2)).toBe(false);
     });
+
+    it('Returns false for different types.', () => {
+      const p = new PackageJson({
+        name: 'foo',
+        dependencies: [dep1],
+        devDependencies: [dep2],
+        additionalData: { private: 'true' },
+      });
+
+      expect(p.equals(undefined)).toBe(false);
+    });
   });
 
   describe('parse', () => {
