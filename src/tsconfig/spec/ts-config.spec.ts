@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { TsConfig } from '../ts-config';
 import { Reference } from '../reference';
+import { TsConfig } from '../ts-config';
 
 describe('TsConfig', () => {
   describe('equals', () => {
