@@ -11,6 +11,14 @@ export class Project {
     this._tsconfig = tsconfig;
   }
 
+  public get packageJson(): PackageJson {
+    return this._packageJson;
+  }
+
+  public get tsconfig(): TsConfig {
+    return this._tsconfig;
+  }
+
   public equals(other: Project): boolean {
     return (
       this._packageJson.equals(other._packageJson) &&

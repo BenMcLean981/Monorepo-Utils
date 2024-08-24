@@ -31,6 +31,22 @@ export class PackageJson {
     this._additionalData = args.additionalData ?? {};
   }
 
+  public get name(): string {
+    return this._name;
+  }
+
+  public get dependencies(): ReadonlyArray<Dependency> {
+    return this._dependencies;
+  }
+
+  public get devDependencies(): ReadonlyArray<Dependency> {
+    return this._devDependencies;
+  }
+
+  public get workspaces(): ReadonlyArray<string> {
+    return this._workspaces;
+  }
+
   public static parse(s: string): PackageJson {
     const json = JSON5.parse(s);
 
