@@ -1,4 +1,5 @@
 import { FileSystem } from '../file-system';
+import { getParentPath, getTopLevel } from '../utils';
 import { InMemoryDirectory } from './in-memory-directory';
 import { InMemoryFile } from './in-memory-file';
 
@@ -91,20 +92,4 @@ export class InMemoryFileSystem implements FileSystem {
   private makeFileNotExistsError(path: string) {
     return new Error(`File "${path}" does not exist.`);
   }
-}
-
-function getParentPath(path: string): string {
-  const segments = path.split('/');
-
-  if (segments.length === 2 && path.startsWith('/')) {
-    return '/';
-  }
-
-  return segments.slice(0, -1).join('/');
-}
-
-function getTopLevel(path: string): string {
-  const segments = path.split('/');
-
-  return segments[segments.length - 1];
 }
