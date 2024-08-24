@@ -5,6 +5,7 @@
     "lib": ["ES2016"],
     "strict": true,
     "declaration": true,
+    "sourceMap": true,
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "skipLibCheck": true,
