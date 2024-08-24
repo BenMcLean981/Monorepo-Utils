@@ -1,3 +1,4 @@
+import * as JSON5 from 'json5';
 import { isEqual } from 'lodash';
 import { Equalable, haveSameItems } from '../haveSameItems';
 import { Snapshot } from '../snapshot';
@@ -14,6 +15,31 @@ export class TsConfig implements Equalable {
   }) {
     this._references = args?.references ?? [];
     this._additionalData = args?.additionalData ?? {};
+  }
+
+  public static parse(s: string): TsConfig {
+    const json = JSON5.parse(s);
+
+    const references = json.references.map(
+      (r: Record<string, string>) => new Reference(r.path),
+    );
+
+    const additionalData = { ...json };
+    delete additionalData['references'];
+
+    return new TsConfig({
+      references,
+      additionalData,
+    });
+  }
+
+  public format(): string {
+    const json = {
+      references: this._references.map((r) => ({ path: r.path })),
+      ...this._additionalData,
+    };
+
+    return JSON5.stringify(json);
   }
 
   public equals(other: unknown): boolean {

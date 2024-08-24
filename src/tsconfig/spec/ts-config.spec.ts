@@ -3,6 +3,38 @@ import { Reference } from '../reference';
 import { TsConfig } from '../ts-config';
 
 describe('TsConfig', () => {
+  describe('parse', () => {
+    it('Parses a tsconfig.json file.', () => {
+      const actual = TsConfig.parse(rawString);
+      const expected = new TsConfig({
+        references: [
+          new Reference('../foo'),
+          new Reference('../bar/tsconfig.lib.json'),
+        ],
+        additionalData: {
+          compilerOptions: {
+            outDir: 'dist',
+          },
+          include: ['src'],
+          exclude: ['node_modules', 'dist'],
+        },
+      });
+
+      expect(actual.equals(expected)).toBe(true);
+    });
+  });
+
+  describe('format', () => {
+    it('formats to the same string it parsed from.', () => {
+      const original = TsConfig.parse(rawString);
+
+      const formatted = original.format();
+      const parsed = TsConfig.parse(formatted);
+
+      expect(parsed.equals(original)).toBe(true);
+    });
+  });
+
   describe('equals', () => {
     it('Returns true for equal.', () => {
       const t1 = new TsConfig({
@@ -49,3 +81,17 @@ describe('TsConfig', () => {
     });
   });
 });
+
+const rawString = `
+{
+  "compilerOptions": {
+    "outDir": "dist",
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../foo" },
+    { "path": "../bar/tsconfig.lib.json" }
+  ]
+}
+`;
