@@ -15,7 +15,6 @@ export function isEqualable(t: unknown): t is Equalable {
   );
 }
 
-
 export const defaultEqualityChecker: EqualityChecker<unknown> = (
   t1,
   t2,
@@ -27,7 +26,6 @@ export const defaultEqualityChecker: EqualityChecker<unknown> = (
     return t1 === t2;
   }
 };
-
 
 export function haveSameItems<T>(
   it1: Iterable<T>,
@@ -73,7 +71,6 @@ function remoteAtIndex<T>(arr: Array<T>, i2: number): Array<T> {
 
   return [...before, ...after];
 }
-
 
 function diffLength<T>(it1: Iterable<T>, it2: Iterable<T>) {
   return getSize(it1) !== getSize(it2);

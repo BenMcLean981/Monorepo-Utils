@@ -19,11 +19,13 @@ describe('PackageJson', () => {
         name: 'foo',
         dependencies: [dep1],
         devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
       });
       const p2 = new PackageJson({
         name: 'foo',
         dependencies: [dep1],
         devDependencies: [dep2],
+        workspaces: ['w2', 'w1'],
       });
 
       expect(p1.equals(p2)).toBe(true);
@@ -34,11 +36,13 @@ describe('PackageJson', () => {
         name: 'foo',
         dependencies: [dep1],
         devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
       });
       const p2 = new PackageJson({
         name: 'bar',
         dependencies: [dep1],
         devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
       });
 
       expect(p1.equals(p2)).toBe(false);
@@ -49,11 +53,13 @@ describe('PackageJson', () => {
         name: 'foo',
         dependencies: [dep1],
         devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
       });
       const p2 = new PackageJson({
         name: 'foo',
         dependencies: [dep3],
         devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
       });
 
       expect(p1.equals(p2)).toBe(false);
@@ -64,11 +70,30 @@ describe('PackageJson', () => {
         name: 'foo',
         dependencies: [dep1],
         devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
       });
       const p2 = new PackageJson({
         name: 'foo',
         dependencies: [dep1],
         devDependencies: [dep3],
+        workspaces: ['w1', 'w2'],
+      });
+
+      expect(p1.equals(p2)).toBe(false);
+    });
+
+    it('Returns false for different workspaces.', () => {
+      const p1 = new PackageJson({
+        name: 'foo',
+        dependencies: [dep1],
+        devDependencies: [dep2],
+        workspaces: ['w1', 'w2'],
+      });
+      const p2 = new PackageJson({
+        name: 'foo',
+        dependencies: [dep1],
+        devDependencies: [dep2],
+        workspaces: ['w1', 'w3'],
       });
 
       expect(p1.equals(p2)).toBe(false);
@@ -118,6 +143,7 @@ describe('PackageJson', () => {
           new Dependency('vite-plugin-dts', '^4.0.1'),
           new Dependency('vitest', '^2.0.5'),
         ],
+        workspaces: ['w1', 'w2'],
         additionalData: {
           version: '0.0.0',
           description:
@@ -215,6 +241,7 @@ const rawString = `{
   "dependencies": {
     "lodash": "^4.17.21",
     "json5": "^2.2.3",
-  }
+  },
+  "workspaces": ["w1", "w2"]
 }
 `;

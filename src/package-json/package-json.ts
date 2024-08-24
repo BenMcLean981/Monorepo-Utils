@@ -1,13 +1,14 @@
-import { isEqual } from 'lodash';
-import { Dependency } from './dependency';
 import JSON5 from 'json5';
+import { isEqual } from 'lodash';
 import { haveSameItems } from '../haveSameItems';
 import { Snapshot } from '../snapshot';
+import { Dependency } from './dependency';
 
 export type ConstructorArgs = {
   name: string;
   dependencies?: ReadonlyArray<Dependency>;
   devDependencies?: ReadonlyArray<Dependency>;
+  workspaces?: ReadonlyArray<string>;
   additionalData?: Snapshot;
 };
 
@@ -18,12 +19,15 @@ export class PackageJson {
 
   private readonly _devDependencies: ReadonlyArray<Dependency>;
 
+  private readonly _workspaces: ReadonlyArray<string>;
+
   private readonly _additionalData: Snapshot;
 
   public constructor(args: ConstructorArgs) {
     this._name = args.name;
     this._dependencies = args.dependencies ?? [];
     this._devDependencies = args.devDependencies ?? [];
+    this._workspaces = args.workspaces ?? [];
     this._additionalData = args.additionalData ?? {};
   }
 
@@ -39,15 +43,19 @@ export class PackageJson {
       ([name, version]) => new Dependency(name, version as string),
     );
 
+    const workspaces = json.workspaces as ReadonlyArray<string>;
+
     const additionalData = { ...json };
     delete additionalData['name'];
     delete additionalData['dependencies'];
     delete additionalData['devDependencies'];
+    delete additionalData['workspaces'];
 
     return new PackageJson({
       name,
       dependencies,
       devDependencies,
+      workspaces,
       additionalData,
     });
   }
@@ -57,6 +65,7 @@ export class PackageJson {
       name: this._name,
       dependencies: makeDependencyObject(this._dependencies),
       devDependencies: makeDependencyObject(this._devDependencies),
+      workspaces: this._workspaces,
       ...this._additionalData,
     };
 
@@ -76,10 +85,13 @@ export class PackageJson {
       (d1, d2) => d1.equals(d2),
     );
 
+    const sameWorkspaces = haveSameItems(this._workspaces, other._workspaces);
+
     return (
       this._name === other._name &&
       sameDependencies &&
       sameDevDependencies &&
+      sameWorkspaces &&
       isEqual(this._additionalData, other._additionalData)
     );
   }
