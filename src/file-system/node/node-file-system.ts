@@ -7,6 +7,9 @@ import { NodeFile } from './node-file';
 
 import fs from 'node:fs';
 
+// TODO: Parity with {InMemoryFIleSystem}
+// Same exceptions and behavior are expected.
+
 export class NodeFileSystem implements FileSystem {
   public exists(path: Path): boolean {
     return fs.existsSync(path.full);
