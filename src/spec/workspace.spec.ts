@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { InMemoryFileSystem } from '../file-system/in-memory/in-memory-file-system';
 import { PackageJson } from '../package-json';
 import { Project } from '../project';
 import { TsConfig } from '../tsconfig/ts-config';
@@ -53,6 +54,54 @@ describe('Workspace', () => {
     );
 
     expect(() => new Workspace(root, [project1, project2])).toThrowError();
+  });
+
+  describe('parse', () => {
+    it('Parses the projects.', () => {
+      const fs = new InMemoryFileSystem();
+
+      const root = new Project(
+        new PackageJson({ name: 'root', workspaces: ['packages/*'] }),
+        new TsConfig(),
+      );
+
+      const package1 = new Project(
+        new PackageJson({ name: 'package1' }),
+        new TsConfig(),
+      );
+      const package2 = new Project(
+        new PackageJson({ name: 'package2' }),
+        new TsConfig(),
+      );
+
+      fs.createDirectory('/foo/bar/');
+
+      fs.createFile('/foo/bar/package.json', root.packageJson.format());
+      fs.createFile('/foo/bar/tsconfig.json', root.tsconfig.format());
+
+      fs.createFile(
+        '/foo/bar/packages/package1/package.json',
+        package1.packageJson.format(),
+      );
+      fs.createFile(
+        '/foo/bar/packages/package1/tsconfig.json',
+        package1.tsconfig.format(),
+      );
+
+      fs.createFile(
+        '/foo/bar/packages/package2/package.json',
+        package2.packageJson.format(),
+      );
+      fs.createFile(
+        '/foo/bar/packages/package2/tsconfig.json',
+        package2.tsconfig.format(),
+      );
+
+      const actual = Workspace.parse('/foo/bar', fs);
+      const expected = new Workspace(root, [package1, package2]);
+
+      expect(actual.equals(expected)).toBe(true);
+    });
   });
 
   describe('equals', () => {

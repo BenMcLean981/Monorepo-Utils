@@ -1,3 +1,5 @@
+import { cwd } from 'process';
+import { NodeFileSystem } from './file-system/node/node-file-system';
 import { Equalable, haveSameItems } from './haveSameItems';
 import { Project } from './project';
 
@@ -11,6 +13,13 @@ export class Workspace implements Equalable {
     this._projects = projects;
 
     this.validate();
+  }
+
+  public static parse(
+    rootdir: string = cwd(),
+    fileSystem = new NodeFileSystem(),
+  ): Workspace {
+    throw 'Not implemented';
   }
 
   private validate(): void {
