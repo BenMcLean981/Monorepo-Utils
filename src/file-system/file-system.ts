@@ -7,7 +7,7 @@ export interface FileSystem {
 
   createDirectory(path: Path): void;
 
-  createFile(path: Path, contents: string): void;
+  writeFile(path: Path, contents: string): void;
 
   getDirectory(path: Path): Directory;
 

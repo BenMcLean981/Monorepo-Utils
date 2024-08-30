@@ -16,7 +16,7 @@ export class NodeFileSystem implements FileSystem {
     fs.mkdirSync(path.full);
   }
 
-  public createFile(path: Path, contents: string): void {
+  public writeFile(path: Path, contents: string): void {
     fs.writeFileSync(path.full, contents);
   }
 

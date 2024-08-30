@@ -36,8 +36,16 @@ export class InMemoryDirectory implements Directory, Equalable {
     this._subDirectories.push(directory);
   }
 
-  public addFile(file: InMemoryFile): void {
-    this._files.push(file);
+  public writeFile(file: InMemoryFile): void {
+    const existingIndex = this._files.findIndex((f) =>
+      f.path.equals(file.path),
+    );
+
+    if (existingIndex != -1) {
+      this._files[existingIndex] = file;
+    } else {
+      this._files.push(file);
+    }
   }
 
   public equals(other: unknown): boolean {

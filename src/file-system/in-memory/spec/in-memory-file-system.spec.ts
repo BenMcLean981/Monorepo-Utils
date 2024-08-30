@@ -32,13 +32,13 @@ describe('InMemoryFileSystem', () => {
     });
 
     it('Returns true when a file exists.', () => {
-      fileSystem.createFile(new Path('/foo'), 'contents');
+      fileSystem.writeFile(new Path('/foo'), 'contents');
 
       expect(fileSystem.exists(new Path('/foo'))).toBe(true);
     });
 
     it('Returns true when a deeply nested file exists.', () => {
-      fileSystem.createFile(new Path('/foo/bar/asdf'), 'contents');
+      fileSystem.writeFile(new Path('/foo/bar/asdf'), 'contents');
 
       expect(fileSystem.exists(new Path('/foo'))).toBe(true);
       expect(fileSystem.exists(new Path('/foo/bar'))).toBe(true);
@@ -53,7 +53,7 @@ describe('InMemoryFileSystem', () => {
 
     it('Returns the file when it exists.', () => {
       const path = new Path('/foo/bar/asdf.txt');
-      fileSystem.createFile(path, 'contents');
+      fileSystem.writeFile(path, 'contents');
 
       const actual = fileSystem.getFile(path);
       const expected = new InMemoryFile(path, 'contents');
@@ -81,10 +81,25 @@ describe('InMemoryFileSystem', () => {
     });
   });
 
-  describe('createFile', () => {
+  describe('writeFile', () => {
     it('Creates the chain of directories that are missing.', () => {
       fileSystem.createDirectory(new Path('/foo'));
-      fileSystem.createFile(new Path('/foo/bar/asdf.txt'), 'contents');
+
+      fileSystem.writeFile(new Path('/foo/bar/asdf.txt'), 'contents');
+      fileSystem.writeFile(new Path('/foo/bar/asdf.txt'), 'different');
+
+      const actual = fileSystem.getFile(new Path('/foo/bar/asdf.txt'));
+      const expected = new InMemoryFile(
+        new Path('/foo/bar/asdf.txt'),
+        'different',
+      );
+
+      expect(expected.equals(actual)).toBe(true);
+    });
+
+    it('Overwrites a file', () => {
+      fileSystem.createDirectory(new Path('/foo'));
+      fileSystem.writeFile(new Path('/foo/bar/asdf.txt'), 'contents');
 
       const actual = fileSystem.getFile(new Path('/foo/bar/asdf.txt'));
       const expected = new InMemoryFile(
@@ -104,6 +119,14 @@ describe('InMemoryFileSystem', () => {
       const expected = new InMemoryDirectory(new Path('/foo/bar'), [], []);
 
       expect(expected.equals(actual)).toBe(true);
+    });
+
+    it('Throws an error for already exists.', () => {
+      fileSystem.createDirectory(new Path('/foo/bar/'));
+
+      expect(() =>
+        fileSystem.createDirectory(new Path('/foo/bar/')),
+      ).toThrowError();
     });
   });
 });

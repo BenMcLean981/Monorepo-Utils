@@ -50,15 +50,19 @@ export class InMemoryFileSystem implements FileSystem {
   }
 
   public createDirectory(path: Path): void {
+    if (this.exists(path)) {
+      throw new Error(`Directory "${path.full}" already exists.`);
+    }
+
     const parent = this.getOrCreateParentDirectory(path);
 
     parent.addDirectory(new InMemoryDirectory(path, [], []));
   }
 
-  public createFile(path: Path, contents: string): void {
+  public writeFile(path: Path, contents: string): void {
     const parent = this.getOrCreateParentDirectory(path);
 
-    parent.addFile(new InMemoryFile(path, contents));
+    parent.writeFile(new InMemoryFile(path, contents));
   }
 
   public getFile(path: Path): InMemoryFile {
