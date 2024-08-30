@@ -60,7 +60,7 @@ export class Workspace implements Equalable {
     const rootPackageJson = PackageJson.parse(rootPackageJsonFile.read());
     const rootTsconfig = TsConfig.parse(rootTsconfigFile.read());
 
-    return new Project(rootPackageJson, rootTsconfig);
+    return new Project(path, rootPackageJson, rootTsconfig);
   }
 
   private validate(): void {

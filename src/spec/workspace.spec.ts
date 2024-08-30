@@ -8,18 +8,25 @@ import { Workspace } from '../workspace';
 
 describe('Workspace', () => {
   it('Throws an error if root is not a workspace.', () => {
-    const root = new Project(new PackageJson({ name: '1' }), new TsConfig());
+    const root = new Project(
+      new Path('/example'),
+      new PackageJson({ name: '1' }),
+      new TsConfig(),
+    );
 
     expect(() => new Workspace(root, [])).toThrowError();
   });
 
   it('Throws an error if any project is also a workspace.', () => {
     const root = new Project(
+      new Path('/example'),
+
       new PackageJson({ name: '1', workspaces: ['packages/*'] }),
       new TsConfig(),
     );
 
     const project = new Project(
+      new Path('/example'),
       new PackageJson({ name: '2', workspaces: ['packages/*'] }),
       new TsConfig(),
     );
@@ -29,27 +36,37 @@ describe('Workspace', () => {
 
   it('Throws an error if root name is duplicated.', () => {
     const root = new Project(
+      new Path('/example'),
+
       new PackageJson({ name: '1', workspaces: ['packages/*'] }),
       new TsConfig(),
     );
 
-    const project = new Project(new PackageJson({ name: '1' }), new TsConfig());
+    const project = new Project(
+      new Path('/example'),
+      new PackageJson({ name: '1' }),
+      new TsConfig(),
+    );
 
     expect(() => new Workspace(root, [project])).toThrowError();
   });
 
   it('Throws an error if project name is duplicated.', () => {
     const root = new Project(
+      new Path('/example'),
       new PackageJson({ name: '1', workspaces: ['packages/*'] }),
       new TsConfig(),
     );
 
     const project1 = new Project(
+      new Path('/example'),
+
       new PackageJson({ name: '2' }),
       new TsConfig(),
     );
 
     const project2 = new Project(
+      new Path('/example'),
       new PackageJson({ name: '2' }),
       new TsConfig(),
     );
@@ -62,42 +79,42 @@ describe('Workspace', () => {
       const fs = new InMemoryFileSystem();
 
       const root = new Project(
+        new Path('/foo/bar'),
         new PackageJson({ name: 'root', workspaces: ['packages/*'] }),
         new TsConfig(),
       );
 
       const package1 = new Project(
+        new Path('/foo/bar/packages/package1'),
         new PackageJson({ name: 'package1' }),
         new TsConfig(),
       );
       const package2 = new Project(
+        new Path('/foo/bar/packages/package2'),
         new PackageJson({ name: 'package2' }),
         new TsConfig(),
       );
 
-      fs.createDirectory(new Path('/foo/bar/'));
+      fs.createDirectory(root.path);
+
+      fs.createFile(root.path.sub('package.json'), root.packageJson.format());
+      fs.createFile(root.path.sub('tsconfig.json'), root.tsconfig.format());
 
       fs.createFile(
-        new Path('/foo/bar/package.json'),
-        root.packageJson.format(),
-      );
-      fs.createFile(new Path('/foo/bar/tsconfig.json'), root.tsconfig.format());
-
-      fs.createFile(
-        new Path('/foo/bar/packages/package1/package.json'),
+        package1.path.sub('package.json'),
         package1.packageJson.format(),
       );
       fs.createFile(
-        new Path('/foo/bar/packages/package1/tsconfig.json'),
+        package1.path.sub('tsconfig.json'),
         package1.tsconfig.format(),
       );
 
       fs.createFile(
-        new Path('/foo/bar/packages/package2/package.json'),
+        package2.path.sub('package.json'),
         package2.packageJson.format(),
       );
       fs.createFile(
-        new Path('/foo/bar/packages/package2/tsconfig.json'),
+        package2.path.sub('tsconfig.json'),
         package2.tsconfig.format(),
       );
 
@@ -117,16 +134,26 @@ describe('Workspace', () => {
 
     beforeEach(() => {
       root1 = new Project(
+        new Path('/example'),
         new PackageJson({ name: 'r1', workspaces: ['packages/*'] }),
         new TsConfig(),
       );
       root2 = new Project(
+        new Path('/example'),
         new PackageJson({ name: 'r2', workspaces: ['packages/*'] }),
         new TsConfig(),
       );
 
-      project1 = new Project(new PackageJson({ name: '1' }), new TsConfig());
-      project2 = new Project(new PackageJson({ name: '2' }), new TsConfig());
+      project1 = new Project(
+        new Path('/example'),
+        new PackageJson({ name: '1' }),
+        new TsConfig(),
+      );
+      project2 = new Project(
+        new Path('/example'),
+        new PackageJson({ name: '2' }),
+        new TsConfig(),
+      );
     });
 
     it('Returns true for equivalent workspaces.', () => {
