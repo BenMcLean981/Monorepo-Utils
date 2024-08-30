@@ -1,7 +1,10 @@
 import { cwd } from 'process';
+import { FileSystem } from './file-system/file-system';
 import { NodeFileSystem } from './file-system/node/node-file-system';
 import { Equalable, haveSameItems } from './haveSameItems';
+import { PackageJson } from './package-json';
 import { Project } from './project';
+import { TsConfig } from './tsconfig/ts-config';
 
 export class Workspace implements Equalable {
   private readonly _root: Project;
@@ -16,10 +19,34 @@ export class Workspace implements Equalable {
   }
 
   public static parse(
-    rootdir: string = cwd(),
+    rootDir: string = cwd(),
     fileSystem = new NodeFileSystem(),
   ): Workspace {
-    throw 'Not implemented';
+    const root = this.parseProject(rootDir, fileSystem);
+
+    const package1 = this.parseProject(
+      `${rootDir}/packages/package1`,
+      fileSystem,
+    );
+    const package2 = this.parseProject(
+      `${rootDir}/packages/package2`,
+      fileSystem,
+    );
+
+    return new Workspace(root, [package1, package2]);
+  }
+
+  private static parseProject(
+    rootDir: string,
+    fileSystem: FileSystem,
+  ): Project {
+    const rootPackageJsonFile = fileSystem.getFile(`${rootDir}/package.json`);
+    const rootTsconfigFile = fileSystem.getFile(`${rootDir}/tsconfig.json`);
+
+    const rootPackageJson = PackageJson.parse(rootPackageJsonFile.read());
+    const rootTsconfig = TsConfig.parse(rootTsconfigFile.read());
+
+    return new Project(rootPackageJson, rootTsconfig);
   }
 
   private validate(): void {
