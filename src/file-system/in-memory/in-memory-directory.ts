@@ -1,26 +1,27 @@
 import { Equalable, haveSameItems } from '../../haveSameItems';
 import { Directory } from '../directory';
+import { Path } from '../path';
 import { InMemoryFile } from './in-memory-file';
 
 export class InMemoryDirectory implements Directory, Equalable {
-  private readonly _name: string;
+  private readonly _path: Path;
 
   private readonly _subDirectories: Array<InMemoryDirectory>;
 
   private readonly _files: Array<InMemoryFile>;
 
   public constructor(
-    name: string,
+    path: Path,
     subDirectories: ReadonlyArray<InMemoryDirectory>,
     files: ReadonlyArray<InMemoryFile>,
   ) {
-    this._name = name;
+    this._path = path;
     this._subDirectories = [...subDirectories];
     this._files = [...files];
   }
 
-  public get name(): string {
-    return this._name;
+  public get path(): Path {
+    return this._path;
   }
 
   public get subDirectories(): ReadonlyArray<InMemoryDirectory> {
@@ -42,7 +43,7 @@ export class InMemoryDirectory implements Directory, Equalable {
   public equals(other: unknown): boolean {
     if (other instanceof InMemoryDirectory) {
       return (
-        this.name === other.name &&
+        this.path.equals(other.path) &&
         haveSameItems(this.subDirectories, other.subDirectories) &&
         haveSameItems(this.files, other.files)
       );

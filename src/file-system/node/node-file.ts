@@ -1,19 +1,19 @@
 import fs from 'node:fs';
 import { File } from '../file';
-import { getTopLevel } from '../utils';
+import { Path } from '../path';
 
 export class NodeFile implements File {
-  private readonly _path: string;
+  private readonly _path: Path;
 
-  public constructor(path: string) {
+  public constructor(path: Path) {
     this._path = path;
   }
 
-  public get name(): string {
-    return getTopLevel(this._path);
+  public get path(): Path {
+    return this._path;
   }
 
   public read(): string {
-    return fs.readFileSync(this._path, 'utf8');
+    return fs.readFileSync(this._path.full, 'utf8');
   }
 }

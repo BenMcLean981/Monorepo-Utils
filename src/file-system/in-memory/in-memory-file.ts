@@ -1,18 +1,19 @@
 import { Equalable } from '../../haveSameItems';
 import { File } from '../file';
+import { Path } from '../path';
 
 export class InMemoryFile implements File, Equalable {
-  private readonly _name: string;
+  private readonly _path: Path;
 
   private readonly _contents: string;
 
-  public constructor(name: string, contents: string) {
-    this._name = name;
+  public constructor(path: Path, contents: string) {
+    this._path = path;
     this._contents = contents;
   }
 
-  public get name(): string {
-    return this._name;
+  public get path(): Path {
+    return this._path;
   }
 
   public read(): string {
@@ -21,7 +22,7 @@ export class InMemoryFile implements File, Equalable {
 
   public equals(other: unknown): boolean {
     if (other instanceof InMemoryFile) {
-      return this.name === other.name && this.read() === other.read();
+      return this.path.equals(other.path) && this.read() === other.read();
     } else {
       return false;
     }

@@ -1,5 +1,7 @@
+import { Path } from './path';
+
 export interface File {
-  readonly name: string;
+  readonly path: Path;
 
   read(): string;
 }

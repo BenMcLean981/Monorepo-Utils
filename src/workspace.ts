@@ -1,6 +1,9 @@
+import globToRegexp from 'glob-to-regexp';
 import { cwd } from 'process';
+import { Directory } from './file-system/directory';
 import { FileSystem } from './file-system/file-system';
 import { NodeFileSystem } from './file-system/node/node-file-system';
+import { Path } from './file-system/path';
 import { Equalable, haveSameItems } from './haveSameItems';
 import { PackageJson } from './package-json';
 import { Project } from './project';
@@ -22,26 +25,37 @@ export class Workspace implements Equalable {
     rootDir: string = cwd(),
     fileSystem = new NodeFileSystem(),
   ): Workspace {
-    const root = this.parseProject(rootDir, fileSystem);
+    const rootPath = new Path(rootDir);
+    const root = Workspace.parseProject(rootPath, fileSystem);
 
-    const package1 = this.parseProject(
-      `${rootDir}/packages/package1`,
-      fileSystem,
-    );
-    const package2 = this.parseProject(
-      `${rootDir}/packages/package2`,
-      fileSystem,
+    const packageRoots = Workspace.getPackageRoots(root, rootPath, fileSystem);
+    const packages = packageRoots.map((root) =>
+      Workspace.parseProject(root.path, fileSystem),
     );
 
-    return new Workspace(root, [package1, package2]);
+    return new Workspace(root, packages);
   }
 
-  private static parseProject(
-    rootDir: string,
-    fileSystem: FileSystem,
-  ): Project {
-    const rootPackageJsonFile = fileSystem.getFile(`${rootDir}/package.json`);
-    const rootTsconfigFile = fileSystem.getFile(`${rootDir}/tsconfig.json`);
+  private static getPackageRoots(
+    root: Project,
+    rootPath: Path,
+    fileSystem: NodeFileSystem,
+  ): ReadonlyArray<Directory> {
+    const rootDirectory = fileSystem.getDirectory(rootPath);
+
+    const globs = root.packageJson.workspaces.map(
+      (workspaceGlob) => `${rootPath}/${workspaceGlob}`,
+    );
+    const regexps = globs.map((g) => globToRegexp(g));
+
+    const directories = getAllSubdirectories(rootDirectory);
+
+    return directories.filter((d) => regexps.some((r) => r.test(d.path.full)));
+  }
+
+  private static parseProject(path: Path, fileSystem: FileSystem): Project {
+    const rootPackageJsonFile = fileSystem.getFile(path.sub('package.json'));
+    const rootTsconfigFile = fileSystem.getFile(path.sub('tsconfig.json'));
 
     const rootPackageJson = PackageJson.parse(rootPackageJsonFile.read());
     const rootTsconfig = TsConfig.parse(rootTsconfigFile.read());
@@ -90,4 +104,8 @@ export class Workspace implements Equalable {
 
 function isWorkspace(project: Project): boolean {
   return project.packageJson.workspaces.length > 0;
+}
+
+function getAllSubdirectories(directory: Directory): ReadonlyArray<Directory> {
+  return [directory, ...directory.subDirectories.flatMap(getAllSubdirectories)];
 }

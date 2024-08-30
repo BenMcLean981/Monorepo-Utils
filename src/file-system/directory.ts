@@ -1,7 +1,8 @@
 import { File } from './file';
+import { Path } from './path';
 
 export interface Directory {
-  readonly name: string;
+  readonly path: Path;
 
   readonly subDirectories: ReadonlyArray<Directory>;
 

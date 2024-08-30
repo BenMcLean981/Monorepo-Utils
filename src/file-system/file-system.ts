@@ -1,14 +1,15 @@
 import { Directory } from './directory';
 import { File } from './file';
+import { Path } from './path';
 
 export interface FileSystem {
-  exists(path: string): boolean;
+  exists(path: Path): boolean;
 
-  createDirectory(path: string): void;
+  createDirectory(path: Path): void;
 
-  createFile(path: string, contents: string): void;
+  createFile(path: Path, contents: string): void;
 
-  getDirectory(path: string): Directory;
+  getDirectory(path: Path): Directory;
 
-  getFile(path: string): File;
+  getFile(path: Path): File;
 }

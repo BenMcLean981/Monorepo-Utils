@@ -34,6 +34,7 @@
     "@eslint/js": "^9.8.0",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/eslint__js": "^8.42.3",
+    "@types/glob-to-regexp": "^0.4.4",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.1.0",
     "eslint": "9.x",
@@ -49,6 +50,7 @@
     "vitest": "^2.0.5"
   },
   "dependencies": {
+    "glob-to-regexp": "^0.4.1",
     "json5": "^2.2.3",
     "lodash": "^4.17.21"
   }
