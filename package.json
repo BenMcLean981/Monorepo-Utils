@@ -1,5 +1,5 @@
 {
-  "name": "monorepo-utils",
+  "name": "@benmclean981/monorepo-utils",
   "version": "0.0.0",
   "description": "An opinionated set of utilities for working with a monorepo.",
   "main": "dist/cjs/index.js",
