@@ -5,7 +5,7 @@ Collection of utilities for a monorepo.
 ## Usage:
 
 ```
-import { DependencyManipulator, parseWorkspace, writeWorkspace } from "@BenMcLean981/Monorepo-Utils
+import { DependencyManipulator, parseWorkspace, writeWorkspace } from "@ben-mclean/Monorepo-Utils
 
 const workspace = parseWorkspace();
 
