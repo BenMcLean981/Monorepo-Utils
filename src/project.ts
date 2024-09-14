@@ -34,19 +34,22 @@ export class Project implements Equalable {
     return this._tsconfig;
   }
 
-  public addDependency(
-    project: Project,
-    version: string,
-    dev: boolean,
-  ): Project {
+  public addDependency(project: Project, version: string): Project {
     const relativePath = path.relative(this.path.full, project.path.full);
 
     return new Project(
       this.path,
-      this.packageJson.addDependency(
-        new Dependency(project.name, version),
-        dev,
-      ),
+      this.packageJson.addDependency(new Dependency(project.name, version)),
+      this.tsconfig.addReference(new Reference(relativePath)),
+    );
+  }
+
+  public addDevDependency(project: Project, version: string): Project {
+    const relativePath = path.relative(this.path.full, project.path.full);
+
+    return new Project(
+      this.path,
+      this.packageJson.addDevDependency(new Dependency(project.name, version)),
       this.tsconfig.addReference(new Reference(relativePath)),
     );
   }

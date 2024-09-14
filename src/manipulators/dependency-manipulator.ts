@@ -21,7 +21,9 @@ export class DependencyManipulator {
     const fromProject = this.getProject(from);
     const toProject = this.getProject(to);
 
-    const newFrom = fromProject.addDependency(toProject, version, dev);
+    const newFrom = dev
+      ? fromProject.addDevDependency(toProject, version)
+      : fromProject.addDependency(toProject, version);
     const updatedWorkspace = this._workspace.updateProject(newFrom);
 
     // TODO: Check for circular.

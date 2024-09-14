@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Path } from '../file-system/path';
-import { PackageJson } from '../package-json';
+import { Dependency, PackageJson } from '../package-json';
 import { Project } from '../project';
 import { Reference } from '../tsconfig/reference';
 import { TsConfig } from '../tsconfig/ts-config';
@@ -75,6 +75,112 @@ describe('Project', () => {
       );
 
       expect(p.equals(undefined)).toBe(false);
+    });
+  });
+
+  describe('addDependency', () => {
+    it('Adds a dependency.', () => {
+      const packageJson = new PackageJson({
+        name: 'project1',
+        dependencies: [new Dependency('example', '1.0.0')],
+        devDependencies: [new Dependency('example-2', '1.0.0')],
+        additionalData: { num: 5 },
+      });
+
+      const project = new Project(
+        new Path('/foo/bar/com/project1'),
+        packageJson,
+        new TsConfig({
+          references: [
+            new Reference('../example'),
+            new Reference('../example-2'),
+          ],
+          additionalData: { num: 6 },
+        }),
+      );
+
+      const target = new Project(
+        new Path('/foo/bar/com/project2'),
+        new PackageJson({ name: 'project2' }),
+        new TsConfig({}),
+      );
+
+      const actual = project.addDependency(target, '*3');
+
+      const expected = new Project(
+        new Path('/foo/bar/com/project1'),
+        new PackageJson({
+          name: 'project1',
+          dependencies: [
+            new Dependency('example', '1.0.0'),
+            new Dependency('project2', '*3'),
+          ],
+          devDependencies: [new Dependency('example-2', '1.0.0')],
+          additionalData: { num: 5 },
+        }),
+        new TsConfig({
+          references: [
+            new Reference('../example'),
+            new Reference('../example-2'),
+            new Reference('../project2'),
+          ],
+          additionalData: { num: 6 },
+        }),
+      );
+
+      expect(actual.equals(expected)).toBe(true);
+    });
+
+    it('Adds a devDependency.', () => {
+      const packageJson = new PackageJson({
+        name: 'project1',
+        dependencies: [new Dependency('example', '1.0.0')],
+        devDependencies: [new Dependency('example-2', '1.0.0')],
+        additionalData: { num: 5 },
+      });
+
+      const project = new Project(
+        new Path('/foo/bar/com/project1'),
+        packageJson,
+        new TsConfig({
+          references: [
+            new Reference('../example'),
+            new Reference('../example-2'),
+          ],
+          additionalData: { num: 6 },
+        }),
+      );
+
+      const target = new Project(
+        new Path('/foo/bar/com/project2'),
+        new PackageJson({ name: 'project2' }),
+        new TsConfig({}),
+      );
+
+      const actual = project.addDevDependency(target, '*3');
+
+      const expected = new Project(
+        new Path('/foo/bar/com/project1'),
+        new PackageJson({
+          name: 'project1',
+          dependencies: [new Dependency('example', '1.0.0')],
+          devDependencies: [
+            new Dependency('example-2', '1.0.0'),
+            new Dependency('project2', '*3'),
+          ],
+          additionalData: { num: 5 },
+        }),
+        new TsConfig({
+          references: [
+            new Reference('../example'),
+            new Reference('../example-2'),
+            new Reference('../project2'),
+          ],
+          additionalData: { num: 6 },
+        }),
+      );
+
+      expect(actual.equals(expected)).toBe(true);
     });
   });
 });

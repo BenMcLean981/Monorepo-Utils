@@ -47,24 +47,24 @@ export class PackageJson implements Equalable {
     return this._workspaces;
   }
 
-  public addDependency(dependency: Dependency, dev = false): PackageJson {
-    if (dev) {
-      return new PackageJson({
-        name: this.name,
-        dependencies: this.dependencies,
-        devDependencies: [...this.devDependencies, dependency],
-        workspaces: this.workspaces,
-        additionalData: this._additionalData,
-      });
-    } else {
-      return new PackageJson({
-        name: this.name,
-        dependencies: [...this.dependencies, dependency],
-        devDependencies: this.devDependencies,
-        workspaces: this.workspaces,
-        additionalData: this._additionalData,
-      });
-    }
+  public addDependency(dependency: Dependency): PackageJson {
+    return new PackageJson({
+      name: this.name,
+      dependencies: [...this.dependencies, dependency],
+      devDependencies: this.devDependencies,
+      workspaces: this.workspaces,
+      additionalData: this._additionalData,
+    });
+  }
+
+  public addDevDependency(dependency: Dependency): PackageJson {
+    return new PackageJson({
+      name: this.name,
+      dependencies: this.dependencies,
+      devDependencies: [...this.devDependencies, dependency],
+      workspaces: this.workspaces,
+      additionalData: this._additionalData,
+    });
   }
 
   public static parse(s: string): PackageJson {
