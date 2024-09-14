@@ -5,7 +5,7 @@ export class DependencyGraphNode implements Equalable {
 
   private readonly _dependencies: Set<string>;
 
-  public constructor(name: string, dependencies: Iterable<string>) {
+  public constructor(name: string, dependencies: Iterable<string> = []) {
     this._name = name;
     this._dependencies = new Set(dependencies);
   }
