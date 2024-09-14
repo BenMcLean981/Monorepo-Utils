@@ -17,6 +17,13 @@ export class TsConfig implements Equalable {
     this._additionalData = args?.additionalData ?? {};
   }
 
+  public addReference(reference: Reference): TsConfig {
+    return new TsConfig({
+      references: [...this._references, reference],
+      additionalData: this._additionalData,
+    });
+  }
+
   public static parse(s: string): TsConfig {
     const json = JSON5.parse(s);
 

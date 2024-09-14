@@ -4,8 +4,8 @@ import { Path } from '../../file-system/path';
 import { PackageJson } from '../../package-json';
 import { Project } from '../../project';
 import { TsConfig } from '../../tsconfig/ts-config';
+import { parseWorkspace } from '../prase-workspace';
 import { Workspace } from '../workspace';
-import { parseWorkspace } from '../workspace-parser';
 import { writeWorkspace } from '../write-workspace';
 
 describe('writeWorkspace', () => {

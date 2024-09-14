@@ -46,6 +46,28 @@ export class Workspace implements Equalable {
     return [...this._projects];
   }
 
+  public updateProject(project: Project): Workspace {
+    let numUpdated = 0;
+
+    const updated = this.projects.map((p) => {
+      if (p.name === project.name) {
+        numUpdated++;
+
+        return project;
+      } else {
+        return p;
+      }
+    });
+
+    if (numUpdated === 0) {
+      throw new Error('Project not updated.');
+    } else if (numUpdated > 1) {
+      throw new Error('Two projects updated.');
+    }
+
+    return new Workspace(this.root, updated);
+  }
+
   public equals(other: unknown): boolean {
     if (other instanceof Workspace) {
       return (
