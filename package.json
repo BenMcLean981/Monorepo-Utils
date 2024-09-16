@@ -2,10 +2,14 @@
   "name": "@ben-mclean/monorepo-utils",
   "version": "0.1.0",
   "description": "An opinionated set of utilities for working with a monorepo.",
-  "main": "dist/cjs/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.js"
+    ".": "./dist/index.js",
+    "./style.css": "./dist/assets/style.css"
   },
   "scripts": {
     "build": "vite build",
@@ -40,6 +44,7 @@
     "eslint": "9.x",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "glob": "^11.0.0",
     "globals": "^15.9.0",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.0.0",
