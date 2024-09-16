@@ -1,6 +1,6 @@
 {
   "name": "@ben-mclean/monorepo-utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An opinionated set of utilities for working with a monorepo.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,6 +12,7 @@
     "./style.css": "./dist/assets/style.css"
   },
   "scripts": {
+    "prepublishOnly": "yarn build",
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
